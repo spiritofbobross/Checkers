@@ -5,36 +5,74 @@ import model.*;
 import java.util.Scanner;
 
 public class CheckersPTUI implements Observer<CheckersModel, CheckersClientData> {
-    private CheckersConfig checkersConfig;
+    private CheckersModel model;
 
-    public CheckersPTUI() { this.checkersConfig = new CheckersConfig(); }
+    public CheckersPTUI() { this.model = new CheckersModel(); }
 
-    public static void main(String[] args) {
-        CheckersPTUI ptui = new CheckersPTUI();
-        Scanner in = new Scanner(System.in);
+    private void run() {
+        CheckersClientData data = new CheckersClientData(null);
+        Scanner in = new Scanner( System.in );
+        System.out.println(model.toString());
+        help();
         for ( ; ; ) {
-            System.out.println(ptui.checkersConfig.toString());
-            System.out.print("Enter move: ");
+            System.out.print("game command: ");
             String line = in.nextLine();
-            if (line.startsWith("q")) {
-                break;
-            } else {
-                String[] temp = line.split("\\s+");
-                int[] nums = new int[temp.length];
-                for (int i = 0; i < temp.length; i++) {
-                    nums[i] = Integer.parseInt(temp[i]);
-                }
-                if (ptui.checkersConfig.move(nums[0], nums[1], nums[2], nums[3])) {
-                    System.out.println("Move successful!");
+            String[] words = line.split("\\s+");
+            if (words.length > 0) {
+                if (words[0].startsWith("q")) {
+                    break;
+                } else if (words[0].startsWith("h")) {
+                    if (model.isSolved()) {
+                        data.setMessage("Already solved!");
+                    } else {
+                        model.hint();
+                    }
+                } else if (words[0].startsWith("r")) {
+                    model.reset();
+                } else if (words[0].startsWith("s")) {
+                    if (model.isSolved()) {
+                        data.setMessage("Already solved!");
+                    } else {
+                        if (words.length < 3) {
+                            System.out.println("Invalid argument");
+                            System.out.println(model.toString());
+                        } else {
+                            String[] pos = new String[2];
+                            pos[0] = words[1];
+                            pos[1] = words[2];
+                            model.select(pos);
+                        }
+                    }
+                } else if (words[0].startsWith("u")) {
+                    model.undo();
                 } else {
-                    System.out.println("Move failed!");
+                    System.out.println("ERROR: invalid command");
+                    help();
                 }
+                update(model, data);
             }
         }
     }
 
     @Override
-    public void update(CheckersModel checkersModel, CheckersClientData checkersClientData) {
-        System.out.println("Implement");
+    public void update(CheckersModel model, CheckersClientData data) {
+        if (data.getMessage() != null) {
+            System.out.println(data.getMessage());
+        }
+    }
+
+    public void help() {
+        System.out.println();
+        System.out.println("s(elect) r c\t-- select cell at r, c");
+        System.out.println("u(ndo)\t-- undo current move");
+        System.out.println("h(int)\t-- hint next move");
+        System.out.println("q(uit)\t-- quit the game");
+        System.out.println("r(eset)\t-- reset the current game");
+    }
+
+    public static void main(String[] args) {
+        CheckersPTUI ptui = new CheckersPTUI();
+        ptui.model.addObserver(ptui);
+        ptui.run();
     }
 }

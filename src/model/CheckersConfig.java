@@ -9,7 +9,7 @@ public class CheckersConfig implements Configuration {
     private static final char EMPTY = '-';
     private static final int DIM = 8;
     int checkerRow, checkerCol;
-    private Checker[][] board;
+    private final Checker[][] board;
 
     public CheckersConfig() {
         board = new Checker[DIM][DIM];
@@ -44,6 +44,17 @@ public class CheckersConfig implements Configuration {
                 }
             }
         }
+    }
+
+    public CheckersConfig(CheckersConfig other) {
+        this.checkerRow = other.checkerRow;
+        this.checkerCol = other.checkerCol;
+        this.board = new Checker[DIM][DIM];
+        for (int i = 0; i < other.board.length; i++) {
+            System.arraycopy(other.board[i], 0,
+                    this.board[i], 0, other.board[i].length);
+        }
+
     }
 
     @Override
@@ -113,6 +124,10 @@ public class CheckersConfig implements Configuration {
     public Collection<Configuration> getNeighbors() {
         return null;
     }
+
+    public int getDim() { return DIM; }
+
+    public Checker[][] getBoard() { return this.board; }
 
     public String toString() {
         StringBuilder result = new StringBuilder();
