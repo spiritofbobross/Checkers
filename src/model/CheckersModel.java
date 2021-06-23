@@ -38,9 +38,7 @@ public class CheckersModel {
             if (Integer.parseInt(currPos[0]) < 0
                     || Integer.parseInt(currPos[0]) >= currentConfig.getDim()
                     || Integer.parseInt(currPos[1]) < 0
-                    || Integer.parseInt(currPos[1]) >= currentConfig.getDim()
-                    || currentConfig.getBoard()[Integer.parseInt(currPos[0])][Integer.parseInt(currPos[1])]
-                       .getName() == '-') {
+                    || Integer.parseInt(currPos[1]) >= currentConfig.getDim()) {
                 data.setMessage("Invalid selection (" + currPos[0] + ", " + currPos[1] + ")");
                 alertObservers(data);
             } else {

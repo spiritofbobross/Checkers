@@ -21,12 +21,14 @@ public class CheckersPTUI implements Observer<CheckersModel, CheckersClientData>
             if (words.length > 0) {
                 if (words[0].startsWith("q")) {
                     break;
+                    /*
                 } else if (words[0].startsWith("h")) {
                     if (model.isSolved()) {
                         data.setMessage("Already solved!");
                     } else {
                         model.hint();
                     }
+                     */
                 } else if (words[0].startsWith("r")) {
                     model.reset();
                 } else if (words[0].startsWith("s")) {
@@ -45,6 +47,8 @@ public class CheckersPTUI implements Observer<CheckersModel, CheckersClientData>
                     }
                 } else if (words[0].startsWith("u")) {
                     model.undo();
+                } else if (words[0].startsWith("?")) {
+                    help();
                 } else {
                     System.out.println("ERROR: invalid command");
                     help();
@@ -68,6 +72,7 @@ public class CheckersPTUI implements Observer<CheckersModel, CheckersClientData>
         System.out.println("h(int)\t-- hint next move");
         System.out.println("q(uit)\t-- quit the game");
         System.out.println("r(eset)\t-- reset the current game");
+        System.out.println("?\t-- show this menu");
     }
 
     public static void main(String[] args) {
