@@ -1,13 +1,13 @@
 package ptui;
 
 import model.*;
-
+import java.util.Random;
 import java.util.Scanner;
 
 public class CheckersPTUI implements Observer<CheckersModel, CheckersClientData> {
     private CheckersModel model;
 
-    public CheckersPTUI() { this.model = new CheckersModel(); }
+    public CheckersPTUI(char turn) { this.model = new CheckersModel(turn); }
 
     private void run() {
         CheckersClientData data = new CheckersClientData(null);
@@ -76,8 +76,20 @@ public class CheckersPTUI implements Observer<CheckersModel, CheckersClientData>
     }
 
     public static void main(String[] args) {
-        CheckersPTUI ptui = new CheckersPTUI();
-        ptui.model.addObserver(ptui);
-        ptui.run();
+        CheckersPTUI ptui;
+        if (args.length != 1) System.out.println("Java usage: 1st move (R B N)");
+        else if (args[0].equals("N")) {
+            Random rand = new Random();
+            int num = rand.nextInt() % 2;
+            if (num == 0) ptui = new CheckersPTUI('R');
+            else ptui = new CheckersPTUI('B');
+            ptui.model.addObserver(ptui);
+            ptui.run();
+        } else if (args[0].equals("B") || args[0].equals("R")) {
+            ptui = new CheckersPTUI(args[0].charAt(0));
+            ptui.model.addObserver(ptui);
+            ptui.run();
+        }
+        else System.out.println("Java usage: 1st move (R B N)");
     }
 }

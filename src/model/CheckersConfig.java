@@ -110,10 +110,10 @@ public class CheckersConfig implements Configuration {
             else
                 return board[checkerRow][checkerCol].getName() == BLACK;
         } else if (board[currRow][currCol].getName() == BLACK
-                   && nextRow-currRow >= 0) {
+                   && nextRow-currRow >= 0 && !board[currRow][currCol].isKing()) {
             return false;
         } else if (board[currRow][currCol].getName() == RED
-                && nextRow-currRow < 1) {
+                && nextRow-currRow < 1 && !board[currRow][currCol].isKing()) {
             return false;
         } else {
             return Math.abs(nextRow - currRow) == 1 && Math.abs(nextCol - currCol) == 1;

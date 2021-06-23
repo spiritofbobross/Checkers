@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Checkers {
     public static void main(String[] args) {
-        CheckersConfig init = new CheckersConfig();
+        CheckersConfig init = new CheckersConfig(null);
         System.out.println(init);
         Solver solver = new Solver();
         List<Configuration> path = solver.solve(init);

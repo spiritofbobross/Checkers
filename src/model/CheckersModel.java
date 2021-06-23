@@ -2,7 +2,6 @@ package model;
 
 import solver.Configuration;
 import solver.Solver;
-
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,14 +18,17 @@ public class CheckersModel {
     /** temp variables for the two selected positions */
     private int[] pos1, pos2;
     private List<CheckersConfig> previousMoves;
+    private char turn;
 
-    public CheckersModel() {
+    public CheckersModel(char turn) {
         this.currentConfig = new CheckersConfig();
+        this.turn = turn;
         this.configSolved = false;
         this.onePosIn = false;
         this.pos1 = new int[2];
         this.pos2 = new int[2];
         this.previousMoves = new LinkedList<>();
+        previousMoves.add(currentConfig);
         this.data = new CheckersClientData(null);
     }
 
@@ -71,6 +73,22 @@ public class CheckersModel {
                         data.setMessage("Puzzle solved!");
                         alertObservers(data);
                     }
+                    previousMoves.add(currentConfig);
+                    if (currentConfig.getBoard()[pos2[0]][pos2[1]].getName() == 'B' &&
+                        pos2[0] == 0) {
+                        currentConfig.getBoard()[pos2[0]][pos2[1]].setKing();
+                        data.setMessage("Piece at (" + pos2[0] + ", " +
+                                        pos2[1] + ") has become king!");
+                        alertObservers(data);
+                    }
+                    if (currentConfig.getBoard()[pos2[0]][pos2[1]].getName() == 'R' &&
+                            pos2[0] == 7) {
+                        currentConfig.getBoard()[pos2[0]][pos2[1]].setKing();
+                        data.setMessage("Piece at (" + pos2[0] + ", " +
+                                pos2[1] + ") has become king!");
+                        alertObservers(data);
+                    }
+                    changeTurn();
                 }
             }
             System.out.println(currentConfig.toString());
@@ -103,11 +121,13 @@ public class CheckersModel {
     }
 
     public void undo() {
-        if (previousMoves.size() == 0) {
+        if (previousMoves.size() == 1) {
             System.out.println("Can't undo");
         } else {
-            previousMoves.remove(previousMoves.size()-1);
             this.currentConfig = new CheckersConfig(previousMoves.get(previousMoves.size()-2));
+            previousMoves.remove(previousMoves.size()-1);
+            if (configSolved) configSolved = false;
+            System.out.println(this.currentConfig.toString());
         }
     }
 
@@ -119,11 +139,13 @@ public class CheckersModel {
         System.out.println(this);
     }
 
+    private void changeTurn() {
+        if (turn == 'B') turn = 'R';
+        else turn = 'B';
+    }
+
     public boolean isSolved() { return configSolved; }
 
-    public int getDim() { return currentConfig.getDim(); }
-
-    public Checker[][] getBoard() { return currentConfig.getBoard(); }
 
     public void addObserver(Observer<CheckersModel, CheckersClientData> observer) { this.observers.add(observer); }
 
