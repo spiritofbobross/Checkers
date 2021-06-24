@@ -49,6 +49,10 @@ public class CheckersModel {
                     pos1[1] = Integer.parseInt(currPos[1]);
                     if (currentConfig.getBoard()[pos1[0]][pos1[1]].getName() == '-') {
                         data.setMessage("Invalid selection (" + currPos[0] + ", " + currPos[1] + ")");
+                    } else if (turn == 'R' && currentConfig.getBoard()[pos1[0]][pos1[1]].getName() == 'B') {
+                        data.setMessage("Not black turn");
+                    } else if (turn == 'B' && currentConfig.getBoard()[pos1[0]][pos1[1]].getName() == 'R') {
+                        data.setMessage("Not red turn");
                     } else {
                         onePosIn = true;
                         data.setMessage("Selected (" + currPos[0] + ", " + currPos[1] + ")");
@@ -109,6 +113,7 @@ public class CheckersModel {
             }
         } else {
             this.currentConfig = (CheckersConfig) path.get(1);
+            previousMoves.add(currentConfig);
             data.setMessage("Next step!");
             alertObservers(data);
             System.out.println(currentConfig.toString());
@@ -142,6 +147,7 @@ public class CheckersModel {
     private void changeTurn() {
         if (turn == 'B') turn = 'R';
         else turn = 'B';
+        System.out.println("Next turn (" + turn + ")");
     }
 
     public boolean isSolved() { return configSolved; }

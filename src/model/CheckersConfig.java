@@ -103,12 +103,20 @@ public class CheckersConfig implements Configuration {
             return false;
         } else if (Math.abs(nextRow-currRow) == 2 &&
                    Math.abs(nextCol-currCol) == 2) {
-            checkerRow = (nextRow + currRow) / 2;
-            checkerCol = (nextCol + currCol) / 2;
-            if (board[currRow][currCol].getName() == BLACK)
-                return board[checkerRow][checkerCol].getName() == RED;
-            else
-                return board[checkerRow][checkerCol].getName() == BLACK;
+            if (board[currRow][currCol].getName() == BLACK
+                    && nextRow-currRow >= 0 && !board[currRow][currCol].isKing()) {
+                return false;
+            } else if (board[currRow][currCol].getName() == RED
+                    && nextRow-currRow < 1 && !board[currRow][currCol].isKing()) {
+                return false;
+            } else {
+                checkerRow = (nextRow + currRow) / 2;
+                checkerCol = (nextCol + currCol) / 2;
+                if (board[currRow][currCol].getName() == BLACK)
+                    return board[checkerRow][checkerCol].getName() == RED;
+                else
+                    return board[checkerRow][checkerCol].getName() == BLACK;
+            }
         } else if (board[currRow][currCol].getName() == BLACK
                    && nextRow-currRow >= 0 && !board[currRow][currCol].isKing()) {
             return false;
