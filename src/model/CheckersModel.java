@@ -69,30 +69,32 @@ public class CheckersModel {
                     } else {
                         data.setMessage("Jumped from (" + pos1[0] + ", " + pos1[1]
                                 + ") to (" + pos2[0] + ", " + pos2[1] + ")");
+                        if (currentConfig.isSolution()) {
+                            configSolved = true;
+                            data.setMessage("Puzzle solved!");
+                            alertObservers(data);
+                        }
+                        previousMoves.add(currentConfig);
+                        if (currentConfig.getBoard()[pos2[0]][pos2[1]].getName() == 'B' &&
+                                pos2[0] == 0) {
+                            currentConfig.getBoard()[pos2[0]][pos2[1]].setKing();
+                            data.setMessage("Piece at (" + pos2[0] + ", " +
+                                    pos2[1] + ") has become king!");
+                            alertObservers(data);
+                        }
+                        if (currentConfig.getBoard()[pos2[0]][pos2[1]].getName() == 'R' &&
+                                pos2[0] == 7) {
+                            currentConfig.getBoard()[pos2[0]][pos2[1]].setKing();
+                            data.setMessage("Piece at (" + pos2[0] + ", " +
+                                    pos2[1] + ") has become king!");
+                            alertObservers(data);
+                        }
+                        if (!(Math.abs(pos2[0]-pos1[0]) == 2) && !possibleMove(pos2[0], pos2[1])) {
+                            changeTurn();
+                        }
                     }
                     onePosIn = false;
                     alertObservers(data);
-                    if (currentConfig.isSolution()) {
-                        configSolved = true;
-                        data.setMessage("Puzzle solved!");
-                        alertObservers(data);
-                    }
-                    previousMoves.add(currentConfig);
-                    if (currentConfig.getBoard()[pos2[0]][pos2[1]].getName() == 'B' &&
-                        pos2[0] == 0) {
-                        currentConfig.getBoard()[pos2[0]][pos2[1]].setKing();
-                        data.setMessage("Piece at (" + pos2[0] + ", " +
-                                        pos2[1] + ") has become king!");
-                        alertObservers(data);
-                    }
-                    if (currentConfig.getBoard()[pos2[0]][pos2[1]].getName() == 'R' &&
-                            pos2[0] == 7) {
-                        currentConfig.getBoard()[pos2[0]][pos2[1]].setKing();
-                        data.setMessage("Piece at (" + pos2[0] + ", " +
-                                pos2[1] + ") has become king!");
-                        alertObservers(data);
-                    }
-                    changeTurn();
                 }
             }
             System.out.println(currentConfig.toString());
@@ -144,6 +146,13 @@ public class CheckersModel {
         System.out.println(this);
     }
 
+    private boolean possibleMove(int row, int col) {
+        if (currentConfig.isValidMove(row, col, row+2, col+2)) return true;
+        else if (currentConfig.isValidMove(row, col, row+2, col-2)) return true;
+        else if (currentConfig.isValidMove(row, col, row-2, col+2)) return true;
+        else return currentConfig.isValidMove(row, col, row-2, col-2);
+    }
+
     private void changeTurn() {
         if (turn == 'B') turn = 'R';
         else turn = 'B';
@@ -155,6 +164,8 @@ public class CheckersModel {
 
     public void addObserver(Observer<CheckersModel, CheckersClientData> observer) { this.observers.add(observer); }
 
+    public int getDim() { return currentConfig.getDim(); }
+
     private void alertObservers(CheckersClientData data) {
         for (var observer : observers)
             observer.update(this, data);
@@ -162,4 +173,6 @@ public class CheckersModel {
 
     @Override
     public String toString() { return currentConfig.toString(); }
+
+    public Checker[][] getBoard() { return currentConfig.getBoard(); }
 }
