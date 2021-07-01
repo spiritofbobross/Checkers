@@ -16,6 +16,7 @@ import model.Checker;
 import model.CheckersClientData;
 import model.CheckersModel;
 import model.Observer;
+import java.util.Random;
 
 public class CheckersGUI extends Application implements Observer<CheckersModel, CheckersClientData> {
     /** model that will execute all operations */
@@ -25,7 +26,7 @@ public class CheckersGUI extends Application implements Observer<CheckersModel, 
     private Label command;
     private Stage stage;
 
-    private final static String RESOURCES_DIR = "resources/";
+    private final String RESOURCES_DIR = "resources/";
     private final Image black = new Image(getClass().getResourceAsStream(RESOURCES_DIR+"blackpiece.png"));
     private final Image blackKing = new Image(getClass().getResourceAsStream(RESOURCES_DIR+"blackking.png"));
     private final Image red = new Image(getClass().getResourceAsStream(RESOURCES_DIR+"redpiece.png"));
@@ -34,8 +35,19 @@ public class CheckersGUI extends Application implements Observer<CheckersModel, 
 
     public void init() {
         char turn = getParameters().getRaw().get(0).charAt(0);
-        this.model = new CheckersModel(turn);
-        model.addObserver(this);
+        if (turn == 'N') {
+            Random rand = new Random();
+            int num = rand.nextInt() % 2;
+            if (num == 0) this.model = new CheckersModel('R');
+            else this.model = new CheckersModel('B');
+            model.addObserver(this);
+        } else if (turn == 'B' || turn == 'R') {
+            this.model = new CheckersModel(turn);
+            model.addObserver(this);
+
+        } else {
+            System.out.println("Usage: java CheckersGUI R B N");
+        }
     }
 
     @Override
@@ -54,7 +66,7 @@ public class CheckersGUI extends Application implements Observer<CheckersModel, 
         hint.setText("Hint");
         hint.addEventHandler(ActionEvent.ANY, (ActionEvent event) -> model.hint());
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(undo, reset, hint);
+        hBox.getChildren().addAll(undo, reset/*, hint*/);
         hBox.setAlignment(Pos.CENTER);
         command = new Label();
         command.setAlignment(Pos.CENTER);

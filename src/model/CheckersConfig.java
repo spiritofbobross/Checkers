@@ -52,7 +52,8 @@ public class CheckersConfig implements Configuration {
         this.board = new Checker[DIM][DIM];
         for (int i = 0; i < other.board.length; i++) {
             System.arraycopy(other.board[i], 0,
-                    this.board[i], 0, other.board[i].length);
+                             this.board[i], 0,
+                             other.board[i].length);
         }
 
     }
