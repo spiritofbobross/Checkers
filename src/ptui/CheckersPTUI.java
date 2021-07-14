@@ -1,6 +1,8 @@
 package ptui;
 
-import model.*;
+import model.CheckersClientData;
+import model.CheckersModel;
+import model.Observer;
 import java.util.Random;
 import java.util.Scanner;
 
