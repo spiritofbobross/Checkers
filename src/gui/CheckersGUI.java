@@ -26,6 +26,7 @@ public class CheckersGUI extends Application implements Observer<CheckersModel, 
     private Label command;
     private Stage stage;
 
+    // make sure these go through
     private final String RESOURCES_DIR = "resources/";
     private final Image black = new Image(getClass().getResourceAsStream(RESOURCES_DIR+"blackpiece.png"));
     private final Image blackKing = new Image(getClass().getResourceAsStream(RESOURCES_DIR+"blackking.png"));
